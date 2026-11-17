@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Petualangan Matematika bersama Ambamut</title>
+<style>
+:root{--green:#159447;--dark:#123b2b;--gold:#ffd45a;--cream:#fff9e9}
+*{box-sizing:border-box}body{margin:0;font-family:Trebuchet MS,Arial,sans-serif;background:linear-gradient(135deg,#dff8e7,#fff4d2);color:#183629;min-height:100vh}
+header{text-align:center;padding:22px 12px 8px}h1{margin:0;color:#116b3b;font-size:clamp(1.55rem,4vw,2.5rem);text-shadow:1px 2px #fff}
+header p{margin:7px 0;color:#476653}
+main{max-width:1050px;margin:12px auto 40px;padding:12px;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(260px,.75fr);gap:18px}
+.panel{background:#ffffffed;border:3px solid #b9e8c8;border-radius:24px;padding:20px;box-shadow:0 8px 22px #245b3420}
+.topline{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-weight:bold;color:#176a3d}
+.progress{height:13px;background:#e5efe7;border-radius:20px;overflow:hidden;margin:12px 0 22px}.bar{height:100%;width:0;background:linear-gradient(90deg,#20b65c,#9cdb39);transition:width .3s}
+#question{font-size:clamp(1.2rem,2.5vw,1.65rem);font-weight:bold;line-height:1.45;margin:15px 0 20px}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.answer{border:2px solid #d4e8d9;background:#f8fff9;border-radius:15px;padding:14px;text-align:left;font-size:1.05rem;font-weight:bold;color:#234b32;cursor:pointer;transition:.15s}
+.answer:hover:not(:disabled){transform:translateY(-2px);border-color:#32a85d;background:#edfff1}
+.answer:disabled{cursor:default;opacity:1}.answer.correct{background:#c9f7d5;border-color:#159447;color:#075b2c}.answer.wrong{background:#ffe0e0;border-color:#e34b4b;color:#9c2020}
+.feedback{min-height:52px;margin-top:16px;padding:13px;border-radius:13px;background:#f1f7f2;font-weight:bold;line-height:1.4}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}
+button.primary{border:0;background:#138844;color:white;padding:13px 22px;border-radius:14px;font-weight:bold;font-size:1rem;cursor:pointer;box-shadow:0 4px 0 #08612d}
+button.primary:disabled{opacity:.45;cursor:not-allowed}
+.side{text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
+.score{font-size:1.1rem;font-weight:bold;color:#176a3d;margin:5px 0 12px}
+.score strong{font-size:2rem;color:#e18b00}
+.ambamut{width:min(100%,300px);height:270px;position:relative;display:flex;justify-content:center;align-items:center}
+.body{width:205px;height:185px;background:linear-gradient(145deg,#b87943,#8a4b27);border:5px solid #633719;border-radius:48% 48% 43% 43%;position:relative;box-shadow:inset -12px -12px 0 #00000012,0 10px 0 #633719;z-index:2}
+.ear{position:absolute;width:55px;height:65px;background:#a96637;border:5px solid #633719;border-radius:50%;top:54px;z-index:1}.ear.left{left:24px}.ear.right{right:24px}
+.eye{position:absolute;top:57px;width:17px;height:22px;background:#fff;border-radius:50%}.eye:after{content:"";position:absolute;width:8px;height:12px;background:#1c1c1c;border-radius:50%;left:5px;top:5px}.eye.left{left:52px}.eye.right{right:52px}
+.brow{position:absolute;top:39px;width:38px;height:10px;border-top:6px solid #432414;border-radius:50%}.brow.left{left:39px;transform:rotate(8deg)}.brow.right{right:39px;transform:rotate(-8deg)}
+.nose{position:absolute;top:83px;left:50%;transform:translateX(-50%);width:27px;height:17px;background:#60351f;border-radius:50%}
+.moustache{position:absolute;top:99px;left:50%;transform:translateX(-50%);width:95px;height:30px}.moustache:before,.moustache:after{content:"";position:absolute;width:52px;height:25px;background:#2b211c;border-radius:80% 15% 70% 30%;top:0}.moustache:before{left:0;transform:rotate(12deg)}.moustache:after{right:0;transform:scaleX(-1) rotate(12deg)}
+.beard{position:absolute;top:122px;left:50%;transform:translateX(-50%);width:78px;height:48px;background:#30231d;clip-path:polygon(0 0,100% 0,88% 60%,50% 100%,12% 60%)}
+.mouth{position:absolute;top:113px;left:50%;transform:translateX(-50%);width:33px;height:12px;border-bottom:4px solid #321d15;border-radius:0 0 50% 50%;z-index:4}
+.arm{position:absolute;width:37px;height:85px;background:#a96637;border:5px solid #633719;border-radius:30px;top:100px;z-index:1}.arm.left{left:3px;transform:rotate(25deg)}.arm.right{right:3px;transform:rotate(-25deg)}
+.tear{position:absolute;width:13px;height:20px;background:#63c9ff;border-radius:60% 40% 60% 60%;top:83px;z-index:5;opacity:0}.tear.left{left:77px}.tear.right{right:77px}
+.caption{font-size:1.15rem;font-weight:bold;min-height:54px;color:#8a4d18;margin:4px}
+.ambamut.happy .body{animation:roll .8s ease-in-out 3}.ambamut.happy .arm.left{animation:flap .25s infinite alternate}.ambamut.happy .arm.right{animation:flap2 .25s infinite alternate}.ambamut.happy .mouth{width:48px;height:28px;background:#4b1712;border:4px solid #321d15;border-radius:10px 10px 50% 50%}
+.ambamut.sad .body{animation:shake .35s ease-in-out 4}.ambamut.sad .tear{opacity:1;animation:drop .8s infinite}
+.ambamut.sad .mouth{width:35px;height:15px;border:0;border-top:4px solid #321d15;border-radius:50%;top:119px}
+@keyframes roll{0%{transform:rotate(0) translateY(0)}25%{transform:rotate(90deg) translateY(-20px)}50%{transform:rotate(180deg) translateY(0)}75%{transform:rotate(270deg) translateY(-20px)}100%{transform:rotate(360deg) translateY(0)}}
+@keyframes flap{to{transform:rotate(100deg)}}@keyframes flap2{to{transform:rotate(-100deg)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-12px)}75%{transform:translateX(12px)}}
+@keyframes drop{to{transform:translateY(24px);opacity:.2}}
+#startScreen{text-align:center;padding:20px 5px}#startScreen h2{color:#116b3b}#startScreen p{line-height:1.6}
+.hidden{display:none!important}
+.result{font-size:1.3rem;line-height:1.7}
+@media(max-width:760px){main{grid-template-columns:1fr}.side{order:-1}.ambamut{height:220px;transform:scale(.82);margin:-15px 0}.answers{grid-template-columns:1fr 1fr}}
+@media(max-width:420px){.answers{grid-template-columns:1fr}.panel{padding:15px}}
+</style>
+</head>
+<body>
+<header><h1>🌟 Petualangan Matematika bersama Ambamut 🌟</h1><p>ASAS Matematika Kelas 5 SD • 40 soal acak</p></header>
+<main>
+<section class="panel">
+  <div id="startScreen">
+    <h2>Siap berpetualang?</h2>
+    <p>Bantu Ambamut menaklukkan 40 soal matematika!<br>Setiap jawaban benar mendapat <b>2,5 poin</b>.<br>Jika benar, Ambamut akan tertawa girang dan guling-guling! 😂</p>
+    <button class="primary" onclick="startGame()">🚀 MULAI PERMAINAN</button>
+  </div>
+  <div id="game" class="hidden">
+    <div class="topline"><span id="counter">Soal 1 dari 40</span><span id="liveScore">Skor: 0</span></div>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <div id="question"></div>
+    <div class="answers" id="answers"></div>
+    <div class="feedback" id="feedback">Pilih jawaban yang menurutmu benar!</div>
+    <div class="actions"><button class="primary" id="nextBtn" onclick="nextQuestion()" disabled>Soal Berikutnya ➜</button></div>
+  </div>
+  <div id="finish" class="hidden">
+    <h2>🏁 Petualangan Selesai!</h2><div class="result" id="resultText"></div>
+    <button class="primary" onclick="startGame()">🔄 Main Lagi (Soal Diacak)</button>
+  </div>
+</section>
+<aside class="panel side">
+  <div class="score">SKOR KAMU<br><strong id="bigScore">0</strong> / 100</div>
+  <div class="ambamut" id="ambamut">
+    <div class="ear left"></div><div class="ear right"></div>
+    <div class="arm left"></div><div class="arm right"></div>
+    <div class="body">
+      <div class="brow left"></div><div class="brow right"></div>
+      <div class="eye left"></div><div class="eye right"></div>
+      <div class="nose"></div><div class="moustache"></div><div class="beard"></div><div class="mouth"></div>
+    </div>
+    <div class="tear left"></div><div class="tear right"></div>
+  </div>
+  <div class="caption" id="ambamutText">"Ayo, kita pasti bisa!"</div>
+  <p style="color:#66806d;font-size:.92rem">Ambamut si jago matematika siap menemanimu!</p>
+</aside>
+</main>
+<script>
+const bank = [
+["Hasil dari 3.475 + 2.689 adalah …",["6.064","6.164","6.154","6.264"],1],
+["Hasil dari 8.000 − 3.756 adalah …",["4.344","4.244","4.254","4.244"],1],
+["Hasil dari 125 × 24 adalah …",["2.500","3.000","3.250","2.750"],1],
+["Hasil dari 1.440 ÷ 12 adalah …",["110","115","120","125"],2],
+["FPB dari 24 dan 36 adalah …",["6","8","12","18"],2],
+["KPK dari 6 dan 8 adalah …",["12","18","24","48"],2],
+["Faktor dari 20 yang juga merupakan faktor 30 adalah …",["4","5","8","10"],1],
+["Bilangan prima di bawah ini adalah …",["21","27","29","33"],2],
+["Pecahan yang senilai dengan 3/4 adalah …",["6/10","9/12","8/12","12/20"],1],
+["Hasil dari 2/5 + 1/5 adalah …",["3/10","3/5","2/10","1/5"],1],
+["Hasil dari 7/8 − 3/8 adalah …",["1/2","3/8","4/16","5/8"],0],
+["Hasil dari 1/2 + 1/4 adalah …",["2/6","3/4","1/6","2/4"],1],
+["Bentuk desimal dari 3/10 adalah …",["0,03","0,3","3,0","0,13"],1],
+["Bentuk persen dari 1/4 adalah …",["20%","25%","40%","50%"],1],
+["0,75 jika diubah menjadi pecahan paling sederhana adalah …",["1/4","2/3","3/4","4/5"],2],
+["Ibu memiliki 2,5 kg gula. Dipakai 0,75 kg. Sisa gula adalah …",["1,25 kg","1,5 kg","1,75 kg","2,25 kg"],2],
+["Jarak rumah ke sekolah 2,4 km. Jarak itu sama dengan … meter.",["24 m","240 m","2.040 m","2.400 m"],3],
+["3 jam 25 menit sama dengan … menit.",["185","195","205","225"],2],
+["2,5 liter sama dengan … mililiter.",["250","2.050","2.500","25.000"],2],
+["Berat 3 kg 250 gram sama dengan … gram.",["3.025","3.250","3.500","3.750"],1],
+["Keliling persegi dengan sisi 14 cm adalah …",["28 cm","42 cm","56 cm","196 cm"],2],
+["Luas persegi panjang dengan panjang 12 cm dan lebar 7 cm adalah …",["19 cm²","38 cm²","72 cm²","84 cm²"],3],
+["Luas persegi dengan sisi 9 cm adalah …",["18 cm²","36 cm²","72 cm²","81 cm²"],3],
+["Keliling segitiga dengan sisi 8 cm, 9 cm, dan 10 cm adalah …",["17 cm","26 cm","27 cm","28 cm"],2],
+["Volume kubus dengan rusuk 5 cm adalah …",["25 cm³","75 cm³","100 cm³","125 cm³"],3],
+["Volume balok berukuran 8 cm × 4 cm × 3 cm adalah …",["48 cm³","64 cm³","96 cm³","120 cm³"],2],
+["Bangun datar yang memiliki tepat 4 sisi sama panjang dan 4 sudut siku-siku adalah …",["Persegi","Persegi panjang","Jajar genjang","Trapesium"],0],
+["Besar sudut siku-siku adalah …",["45°","60°","90°","180°"],2],
+["Sudut yang besarnya lebih dari 90° tetapi kurang dari 180° disebut …",["Lancip","Siku-siku","Tumpul","Lurus"],2],
+["Pada peta berskala 1 : 100.000, jarak 3 cm mewakili jarak sebenarnya …",["300 m","1 km","3 km","30 km"],2],
+["Rata-rata dari 6, 8, 10, dan 12 adalah …",["8","9","10","11"],1],
+["Median dari data 3, 5, 7, 9, 11 adalah …",["5","7","8","9"],1],
+["Modus dari data 4, 5, 5, 6, 7, 5, 8 adalah …",["4","5","6","7"],1],
+["Jumlah buku yang dibaca: Ani 4, Budi 7, Cici 5. Jumlah seluruh buku adalah …",["14","15","16","17"],2],
+["Hasil dari 15 × (8 + 2) adalah …",["120","140","150","160"],2],
+["Hasil dari 360 ÷ (6 × 10) adalah …",["5","6","8","10"],1],
+["Bilangan 4.567 dibulatkan ke ratusan terdekat menjadi …",["4.500","4.560","4.600","5.000"],2],
+["Nilai angka 7 pada bilangan 57.284 adalah …",["7","70","700","7.000"],3],
+["Pecahan 5/6 dibandingkan 4/6 adalah …",["Lebih kecil","Sama besar","Lebih besar","Tidak dapat dibandingkan"],2],
+["Sebuah pita 6 meter dipotong menjadi 4 bagian sama panjang. Panjang tiap bagian adalah …",["1 m","1,25 m","1,5 m","2 m"],2]
+];
+let questions=[],index=0,score=0,answered=false;
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function startGame(){questions=shuffle(bank.map(q=>{let opts=q[1].map((v,i)=>({v,correct:i===q[2]}));shuffle(opts);return {q:q[0],opts}}));index=0;score=0;
+document.getElementById('startScreen').classList.add('hidden');document.getElementById('finish').classList.add('hidden');document.getElementById('game').classList.remove('hidden');setMood('normal','"Ayo, kita pasti bisa!"');render()}
+function render(){answered=false;let q=questions[index];document.getElementById('counter').textContent=`Soal ${index+1} dari 40`;document.getElementById('liveScore').textContent=`Skor: ${score}`;document.getElementById('bigScore').textContent=score;document.getElementById('bar').style.width=(index/40*100)+'%';document.getElementById('question').textContent=q.q;document.getElementById('feedback').textContent='Pilih jawaban yang menurutmu benar!';document.getElementById('nextBtn').disabled=true;document.getElementById('nextBtn').textContent=index===39?'Lihat Hasil 🏆':'Soal Berikutnya ➜';
+let area=document.getElementById('answers');area.innerHTML='';q.opts.forEach((o,i)=>{let b=document.createElement('button');b.className='answer';b.textContent=String.fromCharCode(65+i)+'. '+o.v;b.onclick=()=>choose(i);area.appendChild(b)})}
+function choose(i){if(answered)return;answered=true;let q=questions[index],correct=q.opts[i].correct;document.querySelectorAll('.answer').forEach((b,j)=>{b.disabled=true;if(q.opts[j].correct)b.classList.add('correct')});if(correct){score+=2.5;document.getElementById('feedback').textContent='🎉 BENAR! Hebat sekali! Ambamut tertawa girang dan guling-guling!';setMood('happy','"HAHAHAHA! HEBAT SEKALI!!! 🤣"');laugh()}else{document.querySelectorAll('.answer')[i].classList.add('wrong');document.getElementById('feedback').textContent='😢 Belum tepat. Jawaban yang benar sudah diberi warna hijau. Semangat, coba soal berikutnya!';setMood('sad','"Huwaaaaa… Ambamut sedih! 😭"');cry()}document.getElementById('liveScore').textContent=`Skor: ${score}`;document.getElementById('bigScore').textContent=score;document.getElementById('nextBtn').disabled=false}
+function nextQuestion(){if(index<39){index++;render()}else finish()}
+function finish(){document.getElementById('game').classList.add('hidden');document.getElementById('finish').classList.remove('hidden');document.getElementById('bar').style.width='100%';let s=Number(score.toFixed(1));document.getElementById('bigScore').textContent=s;if(s===100){document.getElementById('resultText').innerHTML=`<b>Skor sempurna: 100 / 100!</b><br>Kamu menjawab semua soal dengan benar! Ambamut bangga sekali!`;setMood('happy','"WOOOOW! NILAI SEMPURNA! HAHAHA! 🎊"');laugh()}else{document.getElementById('resultText').innerHTML=`Skor akhir kamu: <b>${s} / 100</b><br>Jawaban benar: <b>${Math.round(s/2.5)} dari 40 soal</b>.<br>Terus berlatih, ya! Kamu pasti semakin hebat.`;setMood('normal','"Terima kasih sudah bermain! Ayo latihan lagi!"')}}
+function setMood(m,t){let a=document.getElementById('ambamut');a.classList.remove('happy','sad');if(m!=='normal'){void a.offsetWidth;a.classList.add(m)}document.getElementById('ambamutText').textContent=t}
+function laugh(){if('speechSynthesis'in window){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance('Ha ha ha ha! Hebat sekali!');u.lang='id-ID';u.rate=1.15;u.pitch=1.5;speechSynthesis.speak(u)}}
+function cry(){if('speechSynthesis'in window){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance('Huwaaa... belum benar. Coba lagi!');u.lang='id-ID';u.rate=.85;u.pitch=.7;speechSynthesis.speak(u)}}
+</script>
+</body>
+</html>
